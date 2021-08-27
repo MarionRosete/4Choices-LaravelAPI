@@ -34,7 +34,7 @@ class AuthController extends Controller
           'user'=> $user,
           'token'=> $token
       ];
-      return response($response);
+      return response()->json($response);
     }
 
 
@@ -56,7 +56,7 @@ class AuthController extends Controller
             'user'=> $credentials,
             'token'=> $token
         ];
-        return response($response);
+        return response()->json($response);
       }
 
 

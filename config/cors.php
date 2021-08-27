@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['api/register'],
 
     'allowed_methods' => ['*'],
 
@@ -23,11 +23,11 @@ return [
 
     'allowed_origins_patterns' => ['*'],
 
-    'allowed_headers' => ['allowed_origin'],
+    'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['*'],
 
-    'max_age' => 0,
+    'max_age' => 100000,
 
     'supports_credentials' => true,
 
