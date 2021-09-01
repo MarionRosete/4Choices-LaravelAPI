@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Auth\Events\Registered;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,19 +16,21 @@ class AuthController extends Controller
    
 
     //Register
+    
     public function register(Request $request){
-      $fields = $request -> validate([
+      $input = $request -> validate([
           'fullname'=> 'required|string',
-          'email'=>'required|string|unique:users,email',
+          'email'=>'required|string|unique:users',
           'password'=>'required|string|confirmed'
       ]);
+      
       $user = Users::create([
-        'fullname'=>$fields['fullname'],
-        'email'=>$fields['email'],
-        'password'=> bcrypt($fields['password']),
+        'fullname'=>$input['fullname'],
+        'email'=>$input['email'],
+        'password'=> bcrypt($input['password']),
       ]);
-
-      $token = $user->createToken('Token Name')->accessToken;
+      
+    $token = $user->createToken('Token Name')->accessToken;
 
       $response = [
           'user'=> $user,
@@ -41,23 +43,21 @@ class AuthController extends Controller
     //Login
     
     public function login(Request $request){
-        $fields = $request -> validate([
-            
+        $input = $request -> validate([
             'email'=>'required|string',
             'password'=>'required|string'
         ]);
-        $credentials = Users::where('email', $fields['email'])->first();
-        if(!$credentials || !Hash::check($fields['password'],$credentials->password)){
-            return response(['Message' => 'Incorrect Credentials']);
-        }  
-        $token = $credentials->createToken('Token Name')->accessToken;
-  
-        $response = [
-            'user'=> $credentials,
-            'token'=> $token
-        ];
-        return response()->json($response);
-      }
+            if(Auth::attempt(['email' => $input['email'], 'password' => $input['password']])){
+                return response([
+                    'message'=>"successful",
+                    'user'=>auth()->user(),
+                    'token'=>auth()->user()->createToken("Token Name")->accessToken
+                
+                ]);
+            }else{
+                return response(['message' => 'Incorrect Credentials']);
+            }
+    }
 
 
     //LOGOUT
@@ -82,5 +82,9 @@ class AuthController extends Controller
         $user = Socialite::driver('google')->stateless()->user();
         return response()->json($user);
     }
+
+
+    //Emailcallback
+   
   
 }
