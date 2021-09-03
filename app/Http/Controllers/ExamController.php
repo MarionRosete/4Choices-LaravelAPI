@@ -22,8 +22,8 @@ class ExamController extends Controller
           'name'=>$fields['name'],
           'subject'=>$fields['subject'],
           'description'=>$fields['description'],
-          $instructor=auth()->user(),
-          'instructor'=>$instructor->name,
+    
+          'instructor'=>auth()->user()->fullname,
           'code'=> sha1(time()),
          
         ]);

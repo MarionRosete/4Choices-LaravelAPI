@@ -59,6 +59,12 @@ class AuthController extends Controller
             }
     }
 
+    //Current Auth user
+    public function user($id){
+        return response([
+            "user"=>auth()->user()
+        ]);
+    }
 
     //LOGOUT
 
