@@ -19,9 +19,9 @@ class AuthController extends Controller
     
     public function register(Request $request){
       $input = $request -> validate([
-          'fullname'=> 'required|string',
-          'email'=>'required|string|unique:users',
-          'password'=>'required|string|confirmed'
+          'fullname'=> 'required|regex:/^[^<>"]+$/|string',
+          'email'=>'required|regex:/^[^<>"]+$/|string|email|unique:users',
+          'password'=>'required|regex:/^[^<>"]+$/|string|confirmed'
       ]);
       
       $user = Users::create([
@@ -44,8 +44,8 @@ class AuthController extends Controller
     
     public function login(Request $request){
         $input = $request -> validate([
-            'email'=>'required|string',
-            'password'=>'required|string'
+            'email'=>'required|regex:/^[^<>"]+$/|string',
+            'password'=>'required|regex:/^[^<>"]+$/|string'
         ]);
             if(Auth::attempt(['email' => $input['email'], 'password' => $input['password']])){
                 return response([
