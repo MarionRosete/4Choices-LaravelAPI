@@ -33,6 +33,7 @@ class AuthController extends Controller
     $token = $user->createToken('Token Name')->accessToken;
 
       $response = [
+          'message'=>'successful',
           'user'=> $user,
           'token'=> $token
       ];
