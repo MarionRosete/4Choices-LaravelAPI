@@ -31,6 +31,7 @@ class ExamController extends Controller
        
   
         $response = [
+            'message'=>'successful',
             'exam details' => $exam,
         ];
         return response($response);
