@@ -63,6 +63,7 @@ class AuthController extends Controller
     //Current Auth user
     public function user($id){
         return response([
+            "message"=>"authentic",
             "user"=>auth()->user()
         ]);
     }
