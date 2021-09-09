@@ -23,7 +23,8 @@ Route::post('/register', [AuthController::class,'register']);
 //email routes
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-    })->middleware(['auth:api', 'signed'])->name('verification.verify');
+    return response(["user"=>auth()->user()]);
+    })->middleware(['auth:api','signed'])->name('verification.verify');
 
 
 
