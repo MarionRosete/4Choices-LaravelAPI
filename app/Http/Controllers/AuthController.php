@@ -31,7 +31,7 @@ class AuthController extends Controller
       ]);
       
     $token = $user->createToken('Token Name')->accessToken;
-
+    event(new Registered($user));
       $response = [
           'message'=>'successful',
           'user'=> $user,

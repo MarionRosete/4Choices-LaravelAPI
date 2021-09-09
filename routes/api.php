@@ -23,8 +23,6 @@ Route::post('/register', [AuthController::class,'register']);
 //email routes
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-
-    return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 
