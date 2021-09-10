@@ -21,12 +21,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/register', [AuthController::class,'register']);
 //email routes
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->auth()->fulfill();
-    return response(["user"=>$request->user()]);
-    })->middleware(['auth:api','signed'])->name('verification.verify');
-
-
+Route::get('verifyemail/{code}',[AuthController::class,'verifyemail']);
 
 
 

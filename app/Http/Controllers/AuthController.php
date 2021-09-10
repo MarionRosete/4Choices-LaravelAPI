@@ -7,15 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Passport\Bridge\User;
 use Laravel\Socialite\Facades\Socialite;
-
-
+use App\Mail\RegisterUser;
+use App\Models\UserRegistrationCodes;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 class AuthController extends Controller
 {
    
-
-    //Register
+   /**
+    * 
+    */
     
     public function register(Request $request){
       $input = $request -> validate([
@@ -30,19 +35,47 @@ class AuthController extends Controller
         'password'=> bcrypt($input['password']),
       ]);
       
-    $token = $user->createToken('Token Name')->accessToken;
-    event(new Registered($user));
-      $response = [
-          'message'=>'successful',
-          'user'=> $user,
-          'token'=> $token
-      ];
-      return response()->json($response);
+      if($user){
+            $code=UserRegistrationCodes::create([
+                "user_id"=>$user->id,
+                "code"=> Str::random(10)
+            ]);
+            
+
+            Mail::to($user->email)->send(new RegisterUser($user,$code['code']));
+            return response([
+                "success"=>true,
+                "message"=>"Email Registration Sent, click the to activate ExamMate Account",
+                "user"=>$user,
+                "code"=>$code 
+            ]);
+      }
+      return response(["success"=>false,"message"=>"Email Registration not sent","user"=>$user]);
     }
 
+     /**
+      * 
+      */
 
-    //Login
-    
+     public function verifyemail($code){
+            $validcode = UserRegistrationCodes::where(['code'=>$code])->first();
+           
+        if($validcode){
+            $user_fk = $validcode->user_id;
+            $user = Users::where(['id'=>$user_fk])->first();
+            $user->email_verified_at = Carbon::now();
+           $user->save();
+           
+            return response(["success"=>true,"code"=>$validcode, "user"=>$user,"token"=>$user->createToken("Token Name")->accessToken]);
+        }else{
+            return response(["success"=>false,]);
+        }
+    }
+
+    /**
+     * 
+     */
+
     public function login(Request $request){
         $input = $request -> validate([
             'email'=>'required|regex:/^[^<>"]+$/|string',
@@ -50,9 +83,10 @@ class AuthController extends Controller
         ]);
             if(Auth::attempt(['email' => $input['email'], 'password' => $input['password']])){
                 return response([
-                    'message'=>"successful",
-                    'user'=>auth()->user(),
-                    'token'=>auth()->user()->createToken("Token Name")->accessToken
+                    "success"=>true,
+                    "message"=>"Authenticated User",
+                    "user"=>auth()->user(),
+                    "token"=>auth()->user()->createToken("Token Name")->accessToken
                 
                 ]);
             }else{
@@ -60,16 +94,20 @@ class AuthController extends Controller
             }
     }
 
-    //Current Auth user
+    /**
+     * 
+     */
+
     public function user($id){
         return response([
+            "success"=>true,
             "message"=>"authentic",
             "user"=>auth()->user()
         ]);
     }
-
-    //LOGOUT
-
+    /**
+     * 
+     */
     public function logout(){
         auth()->user()->token()->delete();
        $response = [
@@ -80,9 +118,9 @@ class AuthController extends Controller
         return response($response);
 
     }
-
-
-    //Socialite
+    /**
+     * 
+     */
     public function googlecall(){
         return Socialite::driver('google')->stateless()->redirect();
     }
@@ -90,9 +128,5 @@ class AuthController extends Controller
         $user = Socialite::driver('google')->stateless()->user();
         return response()->json($user);
     }
-
-
-    //Emailcallback
-   
   
 }
