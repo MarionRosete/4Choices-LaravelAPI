@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Mail;
 use Laravel\Passport\Bridge\User;
 use Laravel\Socialite\Facades\Socialite;
 use App\Mail\RegisterUser;
+use App\Mail\MailForgetPassword;
+use App\Models\ForgetPassword;
 use App\Models\UserRegistrationCodes;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -45,12 +47,12 @@ class AuthController extends Controller
             Mail::to($user->email)->send(new RegisterUser($user,$code['code']));
             return response([
                 "success"=>true,
-                "message"=>"Email Registration Sent, click the to activate ExamMate Account",
-                "user"=>$user,
-                "code"=>$code 
+                "message"=>"An Code was sent to your Email Address, Please enter it here",
+                "code"=>$code,
+               
             ]);
       }
-      return response(["success"=>false,"message"=>"Email Registration not sent","user"=>$user]);
+      return response(["success"=>false,"message"=>"Email Registration not sent"]);
     }
 
      /**
@@ -64,12 +66,58 @@ class AuthController extends Controller
             $user_fk = $validcode->user_id;
             $user = Users::where(['id'=>$user_fk])->first();
             $user->email_verified_at = Carbon::now();
-           $user->save();
+            $user->save();
            
-            return response(["success"=>true,"code"=>$validcode, "user"=>$user,"token"=>$user->createToken("Token Name")->accessToken]);
+            return response(["success"=>true,"code"=>$validcode, "user"=>$user,  "token"=>$user->createToken("Token Name")->accessToken]);
         }else{
             return response(["success"=>false,]);
         }
+    }
+    public function createForgotPassword(Request $request){
+        $email = $request -> validate([
+            'email'=>'required|regex:/^[^<>"]+$/|string|email|',
+        ]);
+        $user = Users::where(['email'=>$email])->first();
+        if($user){
+            $code=ForgetPassword::create([
+                "email"=>$user->email,
+                "code"=> Str::random(10)
+            ]);
+            Mail::to($user->email)->send(new MailForgetPassword($user,$code['code']));
+            return response([
+                "success"=>true,
+                "message"=>"We've sent an code to your email address.",
+                "code"=>$code 
+            ]);
+          
+           
+        }
+        return response(["succcess"=>false, "message"=>"Email not Found",]);
+      }
+    /**
+     * 
+     */
+    public function updatepassword(Request $request, $code){
+        $validcode = ForgetPassword::where(['code'=>$code])->first();
+        if($validcode){
+            $input = $request -> validate([
+                'password'=>'required|regex:/^[^<>"]+$/|string|confirmed'
+            ]);
+            $user = Users::where('email', $validcode->email)->update(["password"=>bcrypt($input['password'])]);
+          
+              return response([
+                "status"=>true,
+                "message"=>"Updated Password",
+                "user"=>$validcode,
+
+                "updated"=>$user
+              ]);
+
+        }
+        return response([
+            "status"=>false,
+            "message"=>"invalid "
+        ]);
     }
 
     /**
@@ -98,12 +146,14 @@ class AuthController extends Controller
      * 
      */
 
-    public function user($id){
+    public function user(){
+        
         return response([
             "success"=>true,
             "message"=>"authentic",
             "user"=>auth()->user()
         ]);
+
     }
     /**
      * 
@@ -128,5 +178,8 @@ class AuthController extends Controller
         $user = Socialite::driver('google')->stateless()->user();
         return response()->json($user);
     }
+    /**
+     * 
+     */
   
 }

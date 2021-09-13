@@ -7,11 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterUser extends Mailable
+class MailForgetPassword extends Mailable
 {
     use Queueable, SerializesModels;
-    protected $user;
-    protected $code;
+
     /**
      * Create a new message instance.
      *
@@ -30,8 +29,8 @@ class RegisterUser extends Mailable
      */
     public function build()
     {
-       
-        return $this->view(view:'RegisterUser')->with([
+     
+        return $this->view(view:'ForgetPassword')->with([
             "fullname"=>$this->user->fullname,
             "code"=>$this->code
         ]);

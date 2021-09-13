@@ -22,7 +22,8 @@ Route::post('/login', [AuthController::class,'login']);
 Route::post('/register', [AuthController::class,'register']);
 //email routes
 Route::get('verifyemail/{code}',[AuthController::class,'verifyemail']);
-
+Route::post('/forgotpassword',[AuthController::class,'createForgotPassword']);
+Route::post('/updatepassword/{code}',[AuthController::class,'updatepassword']);
 
 
 
@@ -34,7 +35,7 @@ Route::get('/login/googlecallback',[AuthController::class,'googlecallback']);
 Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::post('/dashboard/logout', [AuthController::class, 'logout']);
     Route::post('/dashboard/createExam', [ExamController::class,'createExam']);
-    Route::get('/dashboard/{id}', [AuthController::class,'user']);
+    Route::get('/dashboard/user', [AuthController::class,'user']);
     
 });
 

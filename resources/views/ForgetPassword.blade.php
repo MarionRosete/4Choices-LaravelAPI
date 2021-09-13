@@ -7,6 +7,6 @@
     <title>Activate Your ExamMate Account</title>
 </head>
 <body>
-    <h1>Hello {{$fullname}} Activate your ExamMate account now code: {{$code}}</h1>
+    <h1>Hello {{$fullname}} Reset your ExamMate account now code: {{$code}}</h1>
 </body>
 </html>
