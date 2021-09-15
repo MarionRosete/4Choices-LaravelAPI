@@ -29,7 +29,7 @@ Route::post('/updatepassword/{code}',[AuthController::class,'updatepassword']);
 
 //SOCIALITE ROUTES
 Route::get('/login/google-redirect', [AuthController::class,'googlecall']);
-Route::get('/login/googlecallback',[AuthController::class,'googlecallback']);
+Route::post('/login/googlecallback',[AuthController::class,'googlecallback']);
 
 //AUTHENTICATED ROUTES
 Route::group(['middleware'=>['auth:api', 'verified']],function(){
