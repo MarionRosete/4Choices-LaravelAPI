@@ -17,6 +17,7 @@ use App\Models\UserRegistrationCodes;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Auth\Authenticatable;
 class AuthController extends Controller
 {
    
@@ -116,7 +117,7 @@ class AuthController extends Controller
         }
         return response([
             "status"=>false,
-            "message"=>"invalid "
+            "message"=>"invalid code! "
         ]);
     }
 
@@ -130,6 +131,7 @@ class AuthController extends Controller
             'password'=>'required|regex:/^[^<>"]+$/|string'
         ]);
             if(Auth::attempt(['email' => $input['email'], 'password' => $input['password']])){
+                
                 return response([
                     "success"=>true,
                     "message"=>"Authenticated User",
@@ -171,12 +173,24 @@ class AuthController extends Controller
     /**
      * 
      */
-    public function googlecall(){
-        return Socialite::driver('google')->stateless()->redirect();
-    }
-    public function googlecallback(){
-        $user = Socialite::driver('google')->stateless()->user();
-        return response()->json($user);
+   
+    public function googlecallback(Request $request){
+        $user = $request -> validate([
+            'fullname'=> 'required|regex:/^[^<>"]+$/|string',
+            'email'=>'required|regex:/^[^<>"]+$/|string|email|',
+        ]);
+        $newuser=  Users::firstOrCreate([
+            'email'=>$user['email'],
+        ],
+            [   
+                "fullname"=>$user['fullname'],
+                "password"=>bcrypt( Str::random(10)),
+            ]           
+        );
+        $newuser->email_verified_at = Carbon::now();
+        $newuser->save();
+        return response()->json(["success"=>true,"user"=>$newuser, "token"=>$newuser->createToken("Token Name")->accessToken]);
+     
     }
     /**
      * 
