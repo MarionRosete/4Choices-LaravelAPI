@@ -36,6 +36,8 @@ Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::post('/dashboard/logout', [AuthController::class, 'logout']);
     Route::post('/dashboard/createExam', [ExamController::class,'createExam']);
     Route::get('/dashboard/user', [AuthController::class,'user']);
+    Route::get('/dashboard/exam', [ExamController::class,'myexam']);
+    Route::post('/dashboard/activate', [ExamController::class,'activate']);
     
 });
 

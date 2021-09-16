@@ -18,7 +18,7 @@ class CreateExamsTable extends Migration
             $table->string('name');
             $table->string('subject');
             $table->string('description');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->string('instructor');
             $table->timestamps();
         });
