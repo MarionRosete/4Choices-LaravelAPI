@@ -30,7 +30,7 @@ class MailForgetPassword extends Mailable
     public function build()
     {
      
-        return $this->view(view:'ForgetPassword')->with([
+        return $this->view('ForgetPassword')->with([
             "fullname"=>$this->user->fullname,
             "code"=>$this->code
         ]);

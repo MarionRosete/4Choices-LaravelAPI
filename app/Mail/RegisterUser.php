@@ -30,10 +30,11 @@ class RegisterUser extends Mailable
      */
     public function build()
     {
-       
-        return $this->view(view:'RegisterUser')->with([
+      
+        return $this->view('RegisterUser')->with([
             "fullname"=>$this->user->fullname,
-            "code"=>$this->code
+            "code"=>$this->code,
+          
         ]);
     }
 }
