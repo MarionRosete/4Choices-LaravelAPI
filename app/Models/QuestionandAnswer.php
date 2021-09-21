@@ -10,7 +10,10 @@ class QuestionandAnswer extends Model
     use HasFactory;
     protected $fillable = [
         'question',
-        'answer',
+        'answer1',
+        'answer2',
+        'answer3',
+        'answer4',
         'code',
         
      ];

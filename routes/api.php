@@ -20,7 +20,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 //exposed routes
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/register', [AuthController::class,'register']);
-Route::post('/dashboard/qa/{code}', [ExamController::class,'qa']);
+
 //email routes
 Route::get('verifyemail/{code}',[AuthController::class,'verifyemail']);
 Route::post('/forgotpassword',[AuthController::class,'createForgotPassword']);
@@ -39,6 +39,8 @@ Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::get('/dashboard/user', [AuthController::class,'user']);
     Route::get('/dashboard/exam', [ExamController::class,'myexam']);
     Route::post('/dashboard/activate', [ExamController::class,'activate']);
+    Route::post('/dashboard/createqa/{code}', [ExamController::class,'createqa']);
+    Route::get('/dashboard/myqa/{code}', [ExamController::class,'myqa']);
     
 });
 

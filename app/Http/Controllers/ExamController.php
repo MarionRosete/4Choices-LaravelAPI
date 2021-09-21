@@ -29,21 +29,27 @@ class ExamController extends Controller
         $response = [
             "success"=>true,
             'message'=>'successful',
-            'exam details' => $exam,
+            'exam' => $exam,
         ];
         return response($response);
       }
 
-      public function qa(Request $request, $code){
+      public function createqa(Request $request, $code){
         $examcode = Exams::where(["code"=>$code])->first();
           if($examcode){
           $fields = $request -> validate([
             'question'=> 'required|string',
-            'answer'=>'required|string'
+            'answer1'=>'required|string',
+            'answer2'=>'required|string',
+            'answer3'=>'required|string',
+            'answer4'=>'required|string'
           ]);
           $createexam = QuestionandAnswer::create([
             'question'=>$fields['question'],
-            'answer'=>$fields['answer'],
+            'answer1'=>$fields['answer1'],
+            'answer2'=>$fields['answer2'],
+            'answer3'=>$fields['answer3'],
+            'answer4'=>$fields['answer4'],
             'code'=>$examcode->code
           ]);
           dd($examcode);
@@ -57,12 +63,22 @@ class ExamController extends Controller
      
         $instructor = auth()->user()->fullname;
         $exam = Exams::first();
-        if($exam ===null){
-          return response(["auth"=>true,"user"=>$instructor,"success"=>false]);
-        }
-        $all = Exams::where(["instructor"=>$instructor])->get();
+          
+          $all = Exams::where(["instructor"=>$instructor])->get();
+         
         return response(["auth"=>true,"user"=>$instructor, "success"=>true, "exam"=>$all]);
-    } 
+    }
+    /**
+     * 
+     */
+    public function myqa($code){
+        $validcode = QuestionandAnswer::where(["code"=>$code])->first();
+        if($validcode){
+          $all = QuestionandAnswer::where(["code"=>$code])->get();
+          return response(["success"=>true,"qa"=>$all]);
+        }
+      return response (["success"=>false]);
+    }
     /**
      * 
      */
