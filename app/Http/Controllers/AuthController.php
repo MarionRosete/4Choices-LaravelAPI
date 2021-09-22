@@ -151,9 +151,8 @@ class AuthController extends Controller
     public function user(){
         
         return response([
-            "success"=>true,
-            "message"=>"authentic",
-            "user"=>auth()->user()
+            "auth"=>true,
+            "user"=>auth()->user()->fullname
         ]);
 
     }

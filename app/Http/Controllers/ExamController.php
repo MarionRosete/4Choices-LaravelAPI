@@ -62,11 +62,9 @@ class ExamController extends Controller
     public function myexam(){
      
         $instructor = auth()->user()->fullname;
-        $exam = Exams::first();
-          
-          $all = Exams::where(["instructor"=>$instructor])->get();
+        $all = Exams::where(["instructor"=>$instructor])->get();
          
-        return response(["auth"=>true,"user"=>$instructor, "success"=>true, "exam"=>$all]);
+        return response(["exam"=>$all]);
     }
     /**
      * 
