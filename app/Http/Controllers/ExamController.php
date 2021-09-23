@@ -17,14 +17,14 @@ class ExamController extends Controller
             'name'=> 'required|string',
             'subject'=>'required|string',
             'description'=>'required|string',
-           
+            'code'=>'required|string'
         ]);
         $exam = Exams::create([
           'name'=>$fields['name'],
           'subject'=>$fields['subject'],
           'description'=>$fields['description'],
           'instructor'=>auth()->user()->fullname,
-          "code"=> Str::random(12)
+          "code"=> $fields['code'],
         ]);
         $response = [
             "success"=>true,
