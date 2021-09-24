@@ -17,14 +17,13 @@ class ExamController extends Controller
             'name'=> 'required|string',
             'subject'=>'required|string',
             'description'=>'required|string',
-            'code'=>'required|string'
         ]);
         $exam = Exams::create([
           'name'=>$fields['name'],
           'subject'=>$fields['subject'],
           'description'=>$fields['description'],
           'instructor'=>auth()->user()->fullname,
-          "code"=> $fields['code'],
+          "code"=> Str::random(12)
         ]);
         $response = [
             "success"=>true,
@@ -71,9 +70,10 @@ class ExamController extends Controller
      */
     public function myqa($code){
         $validcode = QuestionandAnswer::where(["code"=>$code])->first();
+        $examname = Exams::where(["code"=>$code])->first();
         if($validcode){
           $all = QuestionandAnswer::where(["code"=>$code])->get();
-          return response(["success"=>true,"qa"=>$all]);
+          return response(["success"=>true,"exam"=>$examname->name,"qa"=>$all]);
         }
       return response (["success"=>false]);
     }
