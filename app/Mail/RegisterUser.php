@@ -30,9 +30,10 @@ class RegisterUser extends Mailable
      */
     public function build()
     {
-      
+        $url = url('api/verifyemail/'.$this->code);
         return $this->view('RegisterUser')->with([
             "fullname"=>$this->user->fullname,
+            "url"=>$url,
             "code"=>$this->code,
           
         ]);

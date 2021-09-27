@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exams;
 use App\Models\QuestionandAnswer;
+use App\Models\Answer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 class ExamController extends Controller
@@ -35,13 +36,15 @@ class ExamController extends Controller
 
       public function createqa(Request $request, $code){
         $examcode = Exams::where(["code"=>$code])->first();
+        
           if($examcode){
           $fields = $request -> validate([
             'question'=> 'required|string',
             'answer1'=>'required|string',
             'answer2'=>'required|string',
             'answer3'=>'required|string',
-            'answer4'=>'required|string'
+            'answer4'=>'required|string',
+            'answer'=>'required'
           ]);
           $createexam = QuestionandAnswer::create([
             'question'=>$fields['question'],
@@ -49,11 +52,16 @@ class ExamController extends Controller
             'answer2'=>$fields['answer2'],
             'answer3'=>$fields['answer3'],
             'answer4'=>$fields['answer4'],
-            'code'=>$examcode->code
+            'exam_id'=>$examcode->id
           ]);
-          dd($examcode);
+          $answer = Answer::create([
+            'answer'=>$fields['answer'],
+            'question_id'=>$createexam->id
+          ]);
+          return response(["success"=>true,]);
           }
-        dd("whoops not working");  
+        dd("Not Working");
+         
       }
     /**
      * 
@@ -87,10 +95,10 @@ class ExamController extends Controller
         if($check){
         $code=Exams::where(["code"=>$check->id])->get();
        
-        
         return response($code);
         }
-        
+    }
+    public function delete(Request $request){
       
     }
 }

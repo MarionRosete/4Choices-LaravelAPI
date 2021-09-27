@@ -20,8 +20,9 @@ class CreateQuestionandAnswersTable extends Migration
             $table->string('answer2');
             $table->string('answer3');
             $table->string('answer4');
-            $table->string('code');
+            $table->bigInteger('exam_id')->unsigned()->index();
             $table->timestamps();
+            $table->foreign('exam_id')->references('id')->on('exams');
          
         });
     }
