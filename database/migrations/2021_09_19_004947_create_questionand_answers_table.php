@@ -22,7 +22,7 @@ class CreateQuestionandAnswersTable extends Migration
             $table->string('answer4');
             $table->bigInteger('exam_id')->unsigned()->index();
             $table->timestamps();
-            $table->foreign('exam_id')->references('id')->on('exams');
+            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');;
          
         });
     }

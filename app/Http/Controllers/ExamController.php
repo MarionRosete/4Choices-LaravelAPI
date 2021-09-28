@@ -77,10 +77,10 @@ class ExamController extends Controller
      * 
      */
     public function myqa($code){
-        $validcode = QuestionandAnswer::where(["code"=>$code])->first();
+        
         $examname = Exams::where(["code"=>$code])->first();
-        if($validcode){
-          $all = QuestionandAnswer::where(["code"=>$code])->get();
+        if($examname){
+          $all = QuestionandAnswer::where(["exam_id"=>$examname->id])->get();
           return response(["success"=>true,"exam"=>$examname->name,"qa"=>$all]);
         }
       return response (["success"=>false]);
@@ -98,7 +98,9 @@ class ExamController extends Controller
         return response($code);
         }
     }
-    public function delete(Request $request){
-      
+    public function delete($code){
+      $examname = Exams::where(["code"=>$code])->first();
+      $examname->delete();
+      return response([$examname]);
     }
 }

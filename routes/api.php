@@ -29,7 +29,6 @@ Route::post('/updatepassword/{code}',[AuthController::class,'updatepassword']);
 
 
 //SOCIALITE ROUTES
-Route::get('/login/google-redirect', [AuthController::class,'googlecall']);
 Route::post('/login/googlecallback',[AuthController::class,'googlecallback']);
 
 //AUTHENTICATED ROUTES
@@ -41,6 +40,7 @@ Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::post('/dashboard/activate', [ExamController::class,'activate']);
     Route::post('/dashboard/createqa/{code}', [ExamController::class,'createqa']);
     Route::get('/dashboard/myqa/{code}', [ExamController::class,'myqa']);
+    Route::get('/dashboard/delete/{code}',[ExamController::class,'delete']);
     
 });
 
