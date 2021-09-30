@@ -103,4 +103,7 @@ class ExamController extends Controller
       $examname->delete();
       return response([$examname]);
     }
+    public function check(){
+      $question= QuestionandAnswer::where([]);
+    }
 }

@@ -20,6 +20,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 //exposed routes
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/register', [AuthController::class,'register']);
+Route::get('/dashboard/attendeesExam/{code}', [ExamController::class,'myqa']);
 
 //email routes
 Route::get('verifyemail/{code}',[AuthController::class,'verifyemail']);
