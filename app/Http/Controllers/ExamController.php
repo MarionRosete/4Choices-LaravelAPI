@@ -52,11 +52,8 @@ class ExamController extends Controller
             'answer2'=>$fields['answer2'],
             'answer3'=>$fields['answer3'],
             'answer4'=>$fields['answer4'],
-            'exam_id'=>$examcode->id
-          ]);
-          $answer = Answer::create([
             'answer'=>$fields['answer'],
-            'question_id'=>$createexam->id
+            'exam_id'=>$examcode->id
           ]);
           return response(["success"=>true,]);
           }
@@ -103,6 +100,16 @@ class ExamController extends Controller
       $examname->delete();
       return response([$examname]);
     }
+    public function attendees($code){
+        
+      $examname = Exams::where(["code"=>$code])->first();
+      if($examname){
+        $all = QuestionandAnswer::where(["exam_id"=>$examname->id])->get();
+        $all->makeHidden(['answer']);
+        return response(["success"=>true,"exam"=>$examname->name,"qa"=>$all]);
+      }
+    return response (["success"=>false]);
+  }
     public function check(){
       $question= QuestionandAnswer::where([]);
     }

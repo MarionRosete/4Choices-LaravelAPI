@@ -14,6 +14,7 @@ class QuestionandAnswer extends Model
         'answer2',
         'answer3',
         'answer4',
+        'answer',
         'exam_id',
         
      ];
