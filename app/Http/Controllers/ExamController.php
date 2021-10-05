@@ -105,7 +105,12 @@ class ExamController extends Controller
       $examname = Exams::where(["code"=>$code])->first();
       if($examname){
         $all = QuestionandAnswer::where(["exam_id"=>$examname->id])->get();
+      
+        if(count($all)===0){
+          return response(["success"=>false]);
+        }
         return response(["success"=>true,"exam"=>$examname->name, "instructor"=>$examname->instructor,"qa"=>$all]);
+        
       }
     return response (["success"=>false]);
   }
