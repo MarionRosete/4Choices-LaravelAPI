@@ -105,12 +105,9 @@ class ExamController extends Controller
       $examname = Exams::where(["code"=>$code])->first();
       if($examname){
         $all = QuestionandAnswer::where(["exam_id"=>$examname->id])->get();
-        $all->makeHidden(['answer']);
-        return response(["success"=>true,"exam"=>$examname->name,"qa"=>$all]);
+        return response(["success"=>true,"exam"=>$examname->name, "instructor"=>$examname->instructor,"qa"=>$all]);
       }
     return response (["success"=>false]);
   }
-    public function check(){
-      $question= QuestionandAnswer::where([]);
-    }
+  
 }
