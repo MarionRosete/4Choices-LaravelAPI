@@ -42,7 +42,7 @@ Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::post('/dashboard/activate', [ExamController::class,'activate']);
     Route::post('/dashboard/createqa/{code}', [ExamController::class,'createqa']);
     Route::get('/dashboard/myqa/{code}', [ExamController::class,'myqa']);
-    Route::get('/dashboard/delete/{id}',[ExamController::class,'delete']);
+    Route::get('/dashboard/delete/{code}',[ExamController::class,'delete']);
     Route::post('/dashboard/createClass',[ClassController::class,'createclass']);
     Route::get('/dashboard/myClass',[ClassController::class,'myclass']);
     Route::get('/dashboard/delete/{id}',[ClassController::class,'delete']);
