@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exams;
+use App\Models\Classes;
 use App\Models\QuestionandAnswer;
 use App\Models\Answer;
 use Illuminate\Http\Request;
@@ -13,18 +14,15 @@ class ExamController extends Controller
     /**
      * 
      */
-    public function createExam(Request $request){
+    public function createExam(Request $request, $id){
+      $checkid= Classes::where(['id'=>$id])->first();
         $fields = $request -> validate([
             'name'=> 'required|string',
-            'subject'=>'required|string',
-            'description'=>'required|string',
         ]);
         $exam = Exams::create([
           'name'=>$fields['name'],
-          'subject'=>$fields['subject'],
-          'description'=>$fields['description'],
-          'instructor'=>auth()->user()->fullname,
-          "code"=> Str::random(12)
+          "code"=> Str::random(12),
+          "class_id"=>$checkid->id
         ]);
         $response = [
             "success"=>true,
@@ -63,12 +61,13 @@ class ExamController extends Controller
     /**
      * 
      */
-    public function myexam(){
+    public function myexam($id){
      
-        $instructor = auth()->user()->fullname;
-        $all = Exams::where(["instructor"=>$instructor])->get();
-         
+      $checkid= Classes::where(['id'=>$id])->first();
+        if($checkid){
+        $all = Exams::where(["class_id"=>$checkid->id])->get(); 
         return response(["exam"=>$all]);
+        };
     }
     /**
      * 
