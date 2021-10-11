@@ -45,7 +45,7 @@ Route::group(['middleware'=>['auth:api', 'verified']],function(){
     Route::get('/dashboard/delete/{code}',[ExamController::class,'delete']);
     Route::post('/dashboard/createClass',[ClassController::class,'createclass']);
     Route::get('/dashboard/myClass',[ClassController::class,'myclass']);
-    Route::get('/dashboard/delete/{id}',[ClassController::class,'delete']);
+    Route::get('/dashboard/deleteclass/{id}',[ClassController::class,'delete']);
     
 });
 
