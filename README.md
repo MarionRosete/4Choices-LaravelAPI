@@ -1,5 +1,5 @@
 <p align="center">
-    *RunComposer install<br/>
+    *Run Composer install<br/>
     *Copy .env.example file to .env<br/>
     *Run php artisan key:generate<br/>
 </p>
