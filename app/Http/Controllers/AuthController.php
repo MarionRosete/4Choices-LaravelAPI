@@ -27,9 +27,9 @@ class AuthController extends Controller
     
     public function register(Request $request){
       $input = $request -> validate([
-          'fullname'=> 'required|regex:/^[^<>"]+$/|string',
-          'email'=>'required|regex:/^[^<>"]+$/|string|email|unique:users',
-          'password'=>'required|regex:/^[^<>"]+$/|string|confirmed'
+          'fullname'=> 'required|regex:/^[-_a-zA-Z0-9. ]+$/|string',
+          'email'=>'required|regex:/^[-_a-zA-Z0-9.@]+$/|string|email|unique:users',
+          'password'=>'required|regex:/^[-_a-zA-Z0-9.]+$/|string|confirmed'
       ]);
       
       $user = Users::create([
@@ -76,7 +76,7 @@ class AuthController extends Controller
     }
     public function createForgotPassword(Request $request){
         $email = $request -> validate([
-            'email'=>'required|regex:/^[^<>"]+$/|string|email|',
+            'email'=>'required|regex:/^[-_a-zA-Z0-9.@]+$/|string|email|',
         ]);
         $user = Users::where(['email'=>$email])->first();
         if($user){
@@ -102,7 +102,7 @@ class AuthController extends Controller
         $validcode = ForgetPassword::where(['code'=>$code])->first();
         if($validcode){
             $input = $request -> validate([
-                'password'=>'required|regex:/^[^<>"]+$/|string|confirmed'
+                'password'=>'required|regex:/^[-_a-zA-Z0-9.@]+$/|string|confirmed'
             ]);
             $user = Users::where('email', $validcode->email)->update(["password"=>bcrypt($input['password'])]);
           
@@ -127,8 +127,8 @@ class AuthController extends Controller
 
     public function login(Request $request){
         $input = $request -> validate([
-            'email'=>'required|regex:/^[^<>"]+$/|string',
-            'password'=>'required|regex:/^[^<>"]+$/|string'
+            'email'=>'required|regex:/^[-_a-zA-Z0-9.@]+$/|string',
+            'password'=>'required|regex:/^[-_a-zA-Z0-9.]+$/|string'
         ]);
             if(Auth::attempt(['email' => $input['email'], 'password' => $input['password']])){
                 
