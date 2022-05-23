@@ -18,7 +18,7 @@ class CreateExamsTable extends Migration
             $table->string('code');
             $table->bigInteger('class_id')->unsigned()->index();
             $table->timestamps();
-            $table->foreign('class_id')->references('id')->on('classes');
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');;
         });
     }
 
